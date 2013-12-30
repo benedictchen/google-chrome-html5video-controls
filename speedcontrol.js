@@ -60,6 +60,7 @@ sophis.VideoControl.prototype.createDom = function() {
   plusButton.classList.add('btn', 'increase');
   fragment.appendChild(container);
   this.videoEl_.parentElement.insertBefore(fragment, this.videoEl_);
+  this.videoEl_.classList.add('sophis-video');
   this.el_ = container;
   this.el_.classList.add(sophis.VideoControl.CLASS_NAME);
   this.speedIndicator_ = speedIndicator;
