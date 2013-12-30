@@ -61,6 +61,8 @@ sophis.VideoControl.prototype.createDom = function() {
   this.el_ = container;
   this.el_.classList.add(sophis.VideoControl.CLASS_NAME);
   this.speedIndicator_ = speedIndicator;
+  this.minusButton_ = minusButton;
+  this.plusButton_ = plusButton;
 };
 
 
@@ -68,9 +70,16 @@ sophis.VideoControl.prototype.createDom = function() {
  * Post-dom creation actions such as adding event listeners.
  */
 sophis.VideoControl.prototype.enterDocument = function() {
+  var self = this;
   this.el_.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
+    if (e.target == self.minusButton_) {
+      self.videoEl_.playbackRate -= 0.25;
+    } else if (e.target == self.plusButton_) {
+      self.videoEl_.playbackRate += 0.25;
+    }
+    self.speedIndicator_.textContent = self.getSpeed();
     return false;
   });
   // Set speed indicator to correct amount.
@@ -82,7 +91,7 @@ sophis.VideoControl.prototype.enterDocument = function() {
  * Gets the current speed of the player.
  */
 sophis.VideoControl.prototype.getSpeed = function() {
-  return parseFloat(this.videoEl_.playbackRate);
+  return parseFloat(this.videoEl_.playbackRate).toFixed(2);
 };
 
 
