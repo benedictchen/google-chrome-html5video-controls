@@ -70,23 +70,25 @@ sophis.VideoControl.prototype.createDom = function() {
  * Post-dom creation actions such as adding event listeners.
  */
 sophis.VideoControl.prototype.enterDocument = function() {
-  var self = this;
-  this.el_.addEventListener('click', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.target == self.minusButton_) {
-      self.videoEl_.playbackRate -= 0.25;
-    } else if (e.target == self.plusButton_) {
-      self.videoEl_.playbackRate += 0.25;
-    }
-    self.speedIndicator_.textContent = self.getSpeed();
-    return false;
-  });
+  var clickHandler = this.handleClick.bind(this);
+  this.el_.addEventListener('click', clickHandler);
+  this.el_.addEventListener('dblclick', clickHandler);
   // Set speed indicator to correct amount.
   this.speedIndicator_.textContent = this.getSpeed();
 };
 
-
+sophis.VideoControl.prototype.handleClick = function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  if (e.target == this.minusButton_) {
+    this.videoEl_.playbackRate -= 0.25;
+  } else if (e.target == this.plusButton_) {
+    this.videoEl_.playbackRate += 0.25;
+  }
+  this.speedIndicator_.textContent = this.getSpeed();
+  return false;
+};
+ 
 /**
  * Gets the current speed of the player.
  */

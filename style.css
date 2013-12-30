@@ -7,6 +7,12 @@
   padding: 5px;
   z-index: 9999999;
   outline: none;
+  opacity: 0.1;
+  -webkit-transition: all 1s;
+}
+
+.sophis-video-control:hover {
+  opacity: 1;
 }
 
 .sophis-video-control .btn {
