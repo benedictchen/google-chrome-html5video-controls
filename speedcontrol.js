@@ -1,3 +1,5 @@
+(function() {
+////////////////////////////////////////////////////////////////////////////////
 /**
  * @filedescription This is a simple script for adding HTML5 speed controls to
  * video elements.
@@ -96,12 +98,12 @@ sophis.VideoControl.prototype.getSpeed = function() {
   return parseFloat(this.videoEl_.playbackRate).toFixed(2);
 };
 
-
-window.console.log("Hello world");
+// Load events.
 var videoTags = document.getElementsByTagName('video');
-window.console.log("Video tags found: ", videoTags.length);
 videoTags.forEach = Array.prototype.forEach;
 videoTags.forEach(function(videoTag) {
   var control = new sophis.VideoControl(videoTag);
 });
 
+////////////////////////////////////////////////////////////////////////////////
+})();

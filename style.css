@@ -8,7 +8,7 @@
   z-index: 9999999;
   outline: none;
   opacity: 0.1;
-  -webkit-transition: all 1s;
+  -webkit-transition: all 0.5s;
 }
 
 .sophis-video-control:hover {
@@ -24,6 +24,7 @@
   border: 1px solid white;
   border-radius: 1000px;
   outline: none;
+  -webkit-transition: all 0.2s;
 }
 
 .sophis-video-control .btn:active {
@@ -32,6 +33,6 @@
 }
 
 .sophis-video-control .speed-indicator {
-  color: lightblue;
+  color: white;
   padding: 0 10px;
 }
