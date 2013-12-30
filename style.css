@@ -6,4 +6,26 @@
   border: 1px solid #ccc;
   padding: 5px;
   z-index: 9999999;
+  outline: none;
+}
+
+.sophis-video-control .btn {
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  color: white;
+  background: black;
+  border: 1px solid white;
+  border-radius: 1000px;
+  outline: none;
+}
+
+.sophis-video-control .btn:active {
+  border: 1px solid lightblue;
+  color: lightblue;
+}
+
+.sophis-video-control .speed-indicator {
+  color: lightblue;
+  padding: 0 30px;
 }
