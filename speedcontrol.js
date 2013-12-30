@@ -55,9 +55,9 @@ sophis.VideoControl.prototype.createDom = function() {
   container.appendChild(plusButton);
   speedIndicator.classList.add('speed-indicator');
   minusButton.textContent = "-";
-  minusButton.classList.add('btn', 'decrease');
+  minusButton.classList.add('sophis-btn', 'decrease');
   plusButton.textContent = "+";
-  plusButton.classList.add('btn', 'increase');
+  plusButton.classList.add('sophis-btn', 'increase');
   fragment.appendChild(container);
   this.videoEl_.parentElement.insertBefore(fragment, this.videoEl_);
   this.videoEl_.classList.add('sophis-video');
@@ -98,6 +98,7 @@ sophis.VideoControl.prototype.handleClick = function(e) {
 sophis.VideoControl.prototype.getSpeed = function() {
   return parseFloat(this.videoEl_.playbackRate).toFixed(2);
 };
+
 
 // Load events.
 var videoTags = document.getElementsByTagName('video');

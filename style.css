@@ -14,13 +14,15 @@
   opacity: 0.3;
   -webkit-transition: all 0.5s;
   margin: 10px;
+  -webkit-user-select: none;
+  cursor: pointer;
 }
 
 .sophis-video-control:hover {
   opacity: 1;
 }
 
-.sophis-video-control .btn {
+.sophis-video-control .sophis-btn {
   display: inline-block;
   height: 20px;
   width: 20px;
@@ -30,9 +32,12 @@
   border-radius: 1000px;
   outline: none;
   -webkit-transition: all 0.2s;
+  line-height: 20px;
+  padding: 0;
+  vertical-align: center;
 }
 
-.sophis-video-control .btn:active {
+.sophis-video-control .sophis-btn:active {
   border: 1px solid lightblue;
   color: lightblue;
 }
