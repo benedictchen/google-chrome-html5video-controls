@@ -1,4 +1,13 @@
+/**
+ * @filedescription This is a simple script for adding HTML5 speed controls to
+ * video elements.
+ * @author Benedict Chen (benedict@benedictchen.com)
+ */
+
 var sophis = sophis || {};
+
+
+
 /**
  * Controls an HTML video with playback speed.
  * @param {Element} targetEl The target element to inject a video control into. 
