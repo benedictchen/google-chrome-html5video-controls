@@ -1,5 +1,6 @@
 .sophis-video {
   position: relative;
+  text-align: center;
 }
 
 .sophis-video-control {
@@ -45,4 +46,15 @@
 .sophis-video-control .speed-indicator {
   color: white;
   padding: 0 10px;
+}
+
+.sophis-close-button {
+  position: absolute;
+  bottom: -10px;
+  left: -webkit-calc(50% - 10px);
+  margin: auto;
+  display: block;
+  color: #ccc;
+  font-size: 10px;
+  font-weight: light;
 }

@@ -32,6 +32,12 @@ sophis.VideoControl = function(targetEl) {
    */
   this.speedIndicator_ = null;
 
+  /**
+   * The button that destroys the component
+   * @private {Element}
+   */
+  this.closeButton_ = null;
+  
   this.createDom();
   this.enterDocument();
 };
@@ -50,14 +56,18 @@ sophis.VideoControl.prototype.createDom = function() {
   var speedIndicator = document.createElement('span');
   var minusButton = document.createElement('button');
   var plusButton = document.createElement('button');
+  var closeButton = document.createElement('a');
   container.appendChild(minusButton);
   container.appendChild(speedIndicator);
   container.appendChild(plusButton);
+  container.appendChild(closeButton);
   speedIndicator.classList.add('speed-indicator');
-  minusButton.textContent = "-";
+  minusButton.textContent = '-';
   minusButton.classList.add('sophis-btn', 'decrease');
-  plusButton.textContent = "+";
+  plusButton.textContent = '+';
   plusButton.classList.add('sophis-btn', 'increase');
+  closeButton.classList.add('sophis-close-button');
+  closeButton.textContent = 'close';
   fragment.appendChild(container);
   this.videoEl_.parentElement.insertBefore(fragment, this.videoEl_);
   this.videoEl_.classList.add('sophis-video');
@@ -66,6 +76,7 @@ sophis.VideoControl.prototype.createDom = function() {
   this.speedIndicator_ = speedIndicator;
   this.minusButton_ = minusButton;
   this.plusButton_ = plusButton;
+  this.closeButton_ = closeButton;
 };
 
 
@@ -83,20 +94,34 @@ sophis.VideoControl.prototype.enterDocument = function() {
 sophis.VideoControl.prototype.handleClick = function(e) {
   e.preventDefault();
   e.stopPropagation();
-  if (e.target == this.minusButton_) {
+  if (e.target === this.minusButton_) {
     this.videoEl_.playbackRate -= 0.25;
-  } else if (e.target == this.plusButton_) {
+  } else if (e.target === this.plusButton_) {
     this.videoEl_.playbackRate += 0.25;
+  } else if (e.target === this.closeButton_) {
+    this.dispose();
   }
   this.speedIndicator_.textContent = this.getSpeed();
   return false;
 };
  
+
 /**
  * Gets the current speed of the player.
  */
 sophis.VideoControl.prototype.getSpeed = function() {
   return parseFloat(this.videoEl_.playbackRate).toFixed(2);
+};
+
+
+/**
+ * Destroys and removes the component from page.
+ */
+sophis.VideoControl.prototype.dispose = function() {
+  var clickHandler = this.handleClick.bind(this);
+  this.el_.removeEventListener('click', clickHandler);
+  this.el_.removeEventListener('dblclick', clickHandler);
+  this.el_.parentNode.removeChild(this.el_);
 };
 
 
