@@ -85,15 +85,20 @@ sophis.VideoControl.prototype.createDom = function() {
  */
 sophis.VideoControl.prototype.enterDocument = function() {
   var clickHandler = this.handleClick.bind(this);
-  this.el_.addEventListener('click', clickHandler);
-  this.el_.addEventListener('dblclick', clickHandler);
+  this.el_.addEventListener('click', clickHandler, true);
+  this.el_.addEventListener('dblclick', clickHandler, true);
   // Set speed indicator to correct amount.
   this.speedIndicator_.textContent = this.getSpeed();
+  this.videoEl_.addEventListener('ratechange', function(event) {
+    this.speedIndicator_textContent = this.getSpeed();
+  }.bind(this));
 };
+
 
 sophis.VideoControl.prototype.handleClick = function(e) {
   e.preventDefault();
   e.stopPropagation();
+  e.cancelBubble = true;
   if (e.target === this.minusButton_) {
     this.videoEl_.playbackRate -= 0.25;
   } else if (e.target === this.plusButton_) {
@@ -130,6 +135,13 @@ var videoTags = document.getElementsByTagName('video');
 videoTags.forEach = Array.prototype.forEach;
 videoTags.forEach(function(videoTag) {
   var control = new sophis.VideoControl(videoTag);
+});
+// Listen for new video elements and inject into it.
+document.addEventListener('DOMNodeInserted', function(event) {
+  var node = event.target || null;
+  if (node && node.nodeName === 'VIDEO') {
+    new sophis.VideoControl(node);
+  }
 });
 
 ////////////////////////////////////////////////////////////////////////////////
