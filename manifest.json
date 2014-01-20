@@ -14,5 +14,6 @@
       "js": ["jquery-2.0.3.min.js", "speedcontrol.js"],
       "all_frames": true
     }
-  ]
+  ],
+  "web_accessible_resources": ["jquery-2.0.3.min.js", "jquery-2.0.3.min.map"]
 }
