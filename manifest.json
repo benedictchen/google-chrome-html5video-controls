@@ -11,9 +11,8 @@
     {
       "matches": ["http://*/*", "https://*/*", "<all_urls>"],
       "css": ["style.css"],
-      "js": ["jquery-2.0.3.min.js", "speedcontrol.js"],
+      "js": ["speedcontrol.js"],
       "all_frames": true
     }
-  ],
-  "web_accessible_resources": ["jquery-2.0.3.min.js", "jquery-2.0.3.min.map"]
+  ]
 }
