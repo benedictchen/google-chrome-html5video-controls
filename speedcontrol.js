@@ -12,7 +12,7 @@ var sophis = sophis || {};
 
 /**
  * Controls an HTML video with playback speed.
- * @param {Element} targetEl The target element to inject a video control into. 
+ * @param {Element} targetEl The target element to inject a video control into.
  */
 sophis.VideoControl = function(targetEl) {
   /**
@@ -20,13 +20,13 @@ sophis.VideoControl = function(targetEl) {
    * @private {Element}
    */
   this.el_ = null;
-  
+
   /**
    * The video element.
    * @private {Element}
    */
   this.videoEl_ = targetEl;
-  
+
   /**
    * @private {Element}
    */
@@ -37,7 +37,7 @@ sophis.VideoControl = function(targetEl) {
    * @private {Element}
    */
   this.closeButton_ = null;
-  
+
   this.createDom();
   this.enterDocument();
 };
@@ -89,9 +89,10 @@ sophis.VideoControl.prototype.enterDocument = function() {
   this.el_.addEventListener('dblclick', clickHandler, true);
   // Set speed indicator to correct amount.
   this.speedIndicator_.textContent = this.getSpeed();
-  this.videoEl_.addEventListener('ratechange', function(event) {
-    this.speedIndicator_textContent = this.getSpeed();
-  }.bind(this));
+  var that = this;
+  this.videoEl_.addEventListener('ratechange', function() {
+    that.speedIndicator_.textContent = that.getSpeed();
+  });
 };
 
 
@@ -106,10 +107,11 @@ sophis.VideoControl.prototype.handleClick = function(e) {
   } else if (e.target === this.closeButton_) {
     this.dispose();
   }
+  // Redundant if we listen for 'ratechange', but do it anyway
   this.speedIndicator_.textContent = this.getSpeed();
   return false;
 };
- 
+
 
 /**
  * Gets the current speed of the player.
@@ -132,9 +134,8 @@ sophis.VideoControl.prototype.dispose = function() {
 
 // Load events.
 var videoTags = document.getElementsByTagName('video');
-videoTags.forEach = Array.prototype.forEach;
-videoTags.forEach(function(videoTag) {
-  var control = new sophis.VideoControl(videoTag);
+Array.prototype.forEach.call(videoTags, function(videoTag) {
+  new sophis.VideoControl(videoTag);
 });
 // Listen for new video elements and inject into it.
 document.addEventListener('DOMNodeInserted', function(event) {
