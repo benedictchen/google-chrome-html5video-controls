@@ -1,4 +1,4 @@
-(function() {
+//(function() {
 ////////////////////////////////////////////////////////////////////////////////
 /**
  * @filedescription This is a simple script for adding HTML5 speed controls to
@@ -8,7 +8,13 @@
 
 var sophis = sophis || {};
 
-
+/** @enum */
+var KeyCodes = {
+  UP: 38,
+  DOWN: 40,
+  LEFT: 37,
+  RIGHT: 39
+};
 
 /**
  * Controls an HTML video with playback speed.
@@ -84,9 +90,11 @@ sophis.VideoControl.prototype.createDom = function() {
  * Post-dom creation actions such as adding event listeners.
  */
 sophis.VideoControl.prototype.enterDocument = function() {
-  var clickHandler = this.handleClick.bind(this);
+  var clickHandler = this.handleClick_.bind(this);
+  var keydownHandler = this.handleKeyDown_.bind(this);
   this.el_.addEventListener('click', clickHandler, true);
   this.el_.addEventListener('dblclick', clickHandler, true);
+  this.el_.addEventListener('keydown', keydownHandler, true);
   // Set speed indicator to correct amount.
   this.speedIndicator_.textContent = this.getSpeed();
   var self = this;
@@ -95,15 +103,59 @@ sophis.VideoControl.prototype.enterDocument = function() {
   });
 };
 
+/**
+ * Increases the current video's playback rate.
+ */
+sophis.VideoControl.prototype.decreaseSpeed = function () {
+  this.videoEl_.playbackRate -= 0.25;
+};
 
-sophis.VideoControl.prototype.handleClick = function(e) {
+/**
+ * Decreases the current video's playback rate.
+ */
+sophis.VideoControl.prototype.increaseSpeed = function () {
+  this.videoEl_.playbackRate += 0.25;
+};
+
+/**
+ * Handles native keyboard events.
+ * @param {Event} e The native keyboard event.
+ * @private
+ */
+sophis.VideoControl.prototype.handleKeyDown_ = function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  var keyCode = e.keyCode;
+  if (keyCode) {
+    switch (keyCode) {
+      case KeyCodes.DOWN:
+      case KeyCodes.LEFT:
+        this.decreaseSpeed();
+      break;
+      case KeyCodes.UP:
+      case KeyCodes.RIGHT:
+        this.increaseSpeed();
+      break;
+      default:
+        this.videoEl_.focus();
+        return false;
+    }
+  }
+};
+
+/**
+ * Handles a user clicking on the video controls.
+ * @param {Event} e The native click event.
+ * @private
+ */
+sophis.VideoControl.prototype.handleClick_ = function(e) {
   e.preventDefault();
   e.stopPropagation();
   e.cancelBubble = true;
   if (e.target === this.minusButton_) {
-    this.videoEl_.playbackRate -= 0.25;
+    this.decreaseSpeed();
   } else if (e.target === this.plusButton_) {
-    this.videoEl_.playbackRate += 0.25;
+    this.increaseSpeed();
   } else if (e.target === this.closeButton_) {
     this.dispose();
   }
@@ -115,6 +167,7 @@ sophis.VideoControl.prototype.handleClick = function(e) {
 
 /**
  * Gets the current speed of the player.
+ * @return {String} The playback speed/rate of the video.
  */
 sophis.VideoControl.prototype.getSpeed = function() {
   return parseFloat(this.videoEl_.playbackRate).toFixed(2);
@@ -125,7 +178,7 @@ sophis.VideoControl.prototype.getSpeed = function() {
  * Destroys and removes the component from page.
  */
 sophis.VideoControl.prototype.dispose = function() {
-  var clickHandler = this.handleClick.bind(this);
+  var clickHandler = this.handleClick_.bind(this);
   this.el_.removeEventListener('click', clickHandler);
   this.el_.removeEventListener('dblclick', clickHandler);
   this.el_.parentNode.removeChild(this.el_);
@@ -146,4 +199,4 @@ document.addEventListener('DOMNodeInserted', function(event) {
 });
 
 ////////////////////////////////////////////////////////////////////////////////
-})();
+//})();
