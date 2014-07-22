@@ -89,9 +89,9 @@ sophis.VideoControl.prototype.enterDocument = function() {
   this.el_.addEventListener('dblclick', clickHandler, true);
   // Set speed indicator to correct amount.
   this.speedIndicator_.textContent = this.getSpeed();
-  var that = this;
+  var self = this;
   this.videoEl_.addEventListener('ratechange', function() {
-    that.speedIndicator_.textContent = that.getSpeed();
+    self.speedIndicator_.textContent = self.getSpeed();
   });
 };
 
