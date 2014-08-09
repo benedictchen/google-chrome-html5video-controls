@@ -16,6 +16,31 @@ var KeyCodes = {
   RIGHT: 39
 };
 
+/** @const */
+var SPEED_PREF_COOKIE = 'sophis-video-speed';
+
+/**
+ * Adds a cookie to the document.
+ * @param {String} key Name of the cookie.
+ * @param {String} value Value of the cookie.
+ */
+var setCookie = function(key, value) {
+  document.cookie = key + '=' + value;
+};
+
+/**
+ * Retrives the value of a cookie by its key.
+ * @param {String} key The key of the cookie to retrieve.
+ * @return {String} The value of the cookie.
+ */
+var getCookie = function(key) {
+  var pattern = new RegExp(key + '=([-+]?[0-9]*\.?[0-9]+)');
+  var results = document.cookie.match(pattern);
+  if (results && results[1]) {
+    return results[1];
+  }
+};
+
 /**
  * Controls an HTML video with playback speed.
  * @param {Element} targetEl The target element to inject a video control into.
@@ -90,6 +115,12 @@ sophis.VideoControl.prototype.createDom = function() {
  * Post-dom creation actions such as adding event listeners.
  */
 sophis.VideoControl.prototype.enterDocument = function() {
+  var self = this;
+  var userSpeedPreference = getCookie(SPEED_PREF_COOKIE) || 1.0;
+  this.videoEl_.controls = true;
+  this.videoEl_.oncanplay = function (event) {
+    self.videoEl_.playbackRate = parseFloat(userSpeedPreference);
+  };
   var clickHandler = this.handleClick_.bind(this);
   var keydownHandler = this.handleKeyDown_.bind(this);
   this.el_.addEventListener('click', clickHandler, true);
@@ -97,7 +128,6 @@ sophis.VideoControl.prototype.enterDocument = function() {
   this.el_.addEventListener('keydown', keydownHandler, true);
   // Set speed indicator to correct amount.
   this.speedIndicator_.textContent = this.getSpeed();
-  var self = this;
   this.videoEl_.addEventListener('ratechange', function() {
     self.speedIndicator_.textContent = self.getSpeed();
   });
@@ -107,14 +137,16 @@ sophis.VideoControl.prototype.enterDocument = function() {
  * Increases the current video's playback rate.
  */
 sophis.VideoControl.prototype.decreaseSpeed = function () {
-  this.videoEl_.playbackRate -= 0.25;
+  this.videoEl_.playbackRate -= 0.10;
+  setCookie(SPEED_PREF_COOKIE, this.videoEl_.playbackRate);
 };
 
 /**
  * Decreases the current video's playback rate.
  */
 sophis.VideoControl.prototype.increaseSpeed = function () {
-  this.videoEl_.playbackRate += 0.25;
+  this.videoEl_.playbackRate += 0.10;
+  setCookie(SPEED_PREF_COOKIE, this.videoEl_.playbackRate);
 };
 
 /**
@@ -184,12 +216,19 @@ sophis.VideoControl.prototype.dispose = function() {
   this.el_.parentNode.removeChild(this.el_);
 };
 
-
-// Load events.
-var videoTags = document.getElementsByTagName('video');
-Array.prototype.forEach.call(videoTags, function(videoTag) {
-  new sophis.VideoControl(videoTag);
-});
+/**
+ * Finds all video elements that have no video control yet and
+ * adds a new one.
+ */
+sophis.VideoControl.insertAll = function () {
+  var videoTags = document.getElementsByTagName('video');
+  Array.prototype.forEach.call(videoTags, function(videoTag) {
+    if (!videoTag.getAttribute('sophis-video-control')) {
+      videoTag.setAttribute('sophis-video-control', true);
+      new sophis.VideoControl(videoTag);
+    }
+  });
+};
 // Listen for new video elements and inject into it.
 document.addEventListener('DOMNodeInserted', function(event) {
   var node = event.target || null;
@@ -197,6 +236,11 @@ document.addEventListener('DOMNodeInserted', function(event) {
     new sophis.VideoControl(node);
   }
 });
+
+sophis.VideoControl.insertAll();
+// Ghetto polling for new video elements being added to the page.
+// Necessary for Tuts+ and many non-standard implementations.
+setInterval(sophis.VideoControl.insertAll, 1000);
 
 ////////////////////////////////////////////////////////////////////////////////
 //})();
