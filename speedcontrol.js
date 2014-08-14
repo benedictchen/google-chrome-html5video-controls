@@ -16,30 +16,6 @@ var KeyCodes = {
   RIGHT: 39
 };
 
-/** @const */
-var SPEED_PREF_COOKIE = 'sophis-video-speed';
-
-/**
- * Adds a cookie to the document.
- * @param {String} key Name of the cookie.
- * @param {String} value Value of the cookie.
- */
-var setCookie = function(key, value) {
-  document.cookie = key + '=' + value;
-};
-
-/**
- * Retrives the value of a cookie by its key.
- * @param {String} key The key of the cookie to retrieve.
- * @return {String} The value of the cookie.
- */
-var getCookie = function(key) {
-  var pattern = new RegExp(key + '=([-+]?[0-9]*\.?[0-9]+)');
-  var results = document.cookie.match(pattern);
-  if (results && results[1]) {
-    return results[1];
-  }
-};
 
 /**
  * Controls an HTML video with playback speed.
@@ -116,11 +92,6 @@ sophis.VideoControl.prototype.createDom = function() {
  */
 sophis.VideoControl.prototype.enterDocument = function() {
   var self = this;
-  var userSpeedPreference = getCookie(SPEED_PREF_COOKIE) || 1.0;
-  this.videoEl_.controls = true;
-  this.videoEl_.oncanplay = function (event) {
-    self.videoEl_.playbackRate = parseFloat(userSpeedPreference);
-  };
   var clickHandler = this.handleClick_.bind(this);
   var keydownHandler = this.handleKeyDown_.bind(this);
   this.el_.addEventListener('click', clickHandler, true);
@@ -138,7 +109,6 @@ sophis.VideoControl.prototype.enterDocument = function() {
  */
 sophis.VideoControl.prototype.decreaseSpeed = function () {
   this.videoEl_.playbackRate -= 0.10;
-  setCookie(SPEED_PREF_COOKIE, this.videoEl_.playbackRate);
 };
 
 /**
@@ -146,7 +116,6 @@ sophis.VideoControl.prototype.decreaseSpeed = function () {
  */
 sophis.VideoControl.prototype.increaseSpeed = function () {
   this.videoEl_.playbackRate += 0.10;
-  setCookie(SPEED_PREF_COOKIE, this.videoEl_.playbackRate);
 };
 
 /**
