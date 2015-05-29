@@ -1,5 +1,3 @@
-//(function() {
-////////////////////////////////////////////////////////////////////////////////
 /**
  * @filedescription This is a simple script for adding HTML5 speed controls to
  * video elements.
@@ -8,7 +6,11 @@
 
 var sophis = sophis || {};
 
-/** @enum */
+/**
+ * Keyboard character mappings from their numeric values.
+ * @type {Object.<String:Number>}
+ * @enum
+ */
 var KeyCodes = {
   UP: 38,
   DOWN: 40,
@@ -16,6 +18,15 @@ var KeyCodes = {
   RIGHT: 39
 };
 
+/**
+ * A mapping of actions to keyboard character values.
+ * @type {Object.<String>}
+ * @enum
+ */
+var KeyMapping = {
+  DECREASE_SPEED: 'A',
+  INCREASE_SPEED: 'S'
+};
 
 /**
  * Controls an HTML video with playback speed.
@@ -48,7 +59,6 @@ sophis.VideoControl = function(targetEl) {
   this.createDom();
   this.enterDocument();
 };
-
 
 /** @const */
 sophis.VideoControl.CLASS_NAME = 'sophis-video-control';
@@ -84,6 +94,14 @@ sophis.VideoControl.prototype.createDom = function() {
   this.minusButton_ = minusButton;
   this.plusButton_ = plusButton;
   this.closeButton_ = closeButton;
+  // Vimeo iframe hack.  They are intercepting all our events with a hidden
+  // element.
+  if (this.isLocationVimeo_()) {
+    var clickInterceptingScum = document.querySelector('.player .target');
+    if (clickInterceptingScum) {
+      clickInterceptingScum.parentElement.removeChild(clickInterceptingScum);
+    }
+  }
 };
 
 
@@ -94,9 +112,11 @@ sophis.VideoControl.prototype.enterDocument = function() {
   var self = this;
   var clickHandler = this.handleClick_.bind(this);
   var keydownHandler = this.handleKeyDown_.bind(this);
-  this.el_.addEventListener('click', clickHandler, true);
-  this.el_.addEventListener('dblclick', clickHandler, true);
-  this.el_.addEventListener('keydown', keydownHandler, true);
+  var keyPressHandler = this.handleKeyPress_.bind(this);
+  document.body.addEventListener('click', clickHandler, true);
+  document.body.addEventListener('dblclick', clickHandler, true);
+  document.body.addEventListener('keydown', keydownHandler, true);
+  document.body.addEventListener('keypress', keyPressHandler, true);
   // Set speed indicator to correct amount.
   this.speedIndicator_.textContent = this.getSpeed();
   this.videoEl_.addEventListener('ratechange', function() {
@@ -119,13 +139,53 @@ sophis.VideoControl.prototype.increaseSpeed = function () {
 };
 
 /**
- * Handles native keyboard events.
- * @param {Event} e The native keyboard event.
+ * Determines if the current video element is playing.
+ * @return {Boolean} Whether or not the video is playing.
+ * @private
+ */
+sophis.VideoControl.prototype.isPlaying_ = function() {
+  var videoEl = this.videoEl_;
+  return videoEl.currentTime > 0 && !videoEl.paused && !videoEl.ended;
+};
+
+sophis.VideoControl.prototype.hasFocus = function() {
+  var activeEl = document.activeElement;
+  if (activeEl.nodeName === 'BODY') {
+    return false;
+  }
+  return (activeEl && activeEl.querySelector('video, .sophis-video-control'));
+};
+
+/**
+ * Handles the native `keyPress` events.
+ * @param {Event} e The native key press event.
+ */
+sophis.VideoControl.prototype.handleKeyPress_ = function(e) {
+  if (!this.isPlaying_() || !this.hasFocus() || !e.keyCode) {
+    return;
+  }
+  var characterValue = String.fromCharCode(e.keyCode).toUpperCase();
+  if (characterValue) {
+    switch(characterValue) {
+      case KeyMapping.INCREASE_SPEED:
+        this.increaseSpeed();
+        break;
+      case KeyMapping.DECREASE_SPEED:
+        this.decreaseSpeed();
+        break;
+    }
+  }
+}
+
+/**
+ * Handles native `keyDown` events.
+ * @param {Event} e The native keyDown event.
  * @private
  */
 sophis.VideoControl.prototype.handleKeyDown_ = function(e) {
-  e.preventDefault();
-  e.stopPropagation();
+  if (!this.isPlaying_() || !this.hasFocus()) {
+    return;
+  }
   var keyCode = e.keyCode;
   if (keyCode) {
     switch (keyCode) {
@@ -150,6 +210,9 @@ sophis.VideoControl.prototype.handleKeyDown_ = function(e) {
  * @private
  */
 sophis.VideoControl.prototype.handleClick_ = function(e) {
+  if (!e.target.classList.contains('sophis-btn')) {
+    return;
+  }
   e.preventDefault();
   e.stopPropagation();
   e.cancelBubble = true;
@@ -165,6 +228,24 @@ sophis.VideoControl.prototype.handleClick_ = function(e) {
   return false;
 };
 
+/**
+ * Determines whether or not the current page is being executed within
+ * the boundaries of an iframe.
+ * @return {Boolean} Whether or not the current page is an iframe.
+ * @private
+ */
+sophis.VideoControl.prototype.isEmbeddedInIframe_ = function() {
+  return window.self !== window.top;
+};
+
+/**
+ * Determines whether we are coming from a Vimeo URL.
+ * @return {Boolean} Whether or not the current window is from Vimeo.
+ * @private
+ */
+sophis.VideoControl.prototype.isLocationVimeo_ = function() {
+  return !!window.location.href.match('vimeo');
+};
 
 /**
  * Gets the current speed of the player.
@@ -173,7 +254,6 @@ sophis.VideoControl.prototype.handleClick_ = function(e) {
 sophis.VideoControl.prototype.getSpeed = function() {
   return parseFloat(this.videoEl_.playbackRate).toFixed(2);
 };
-
 
 /**
  * Destroys and removes the component from page.
@@ -211,5 +291,3 @@ sophis.VideoControl.insertAll();
 // Necessary for Tuts+ and many non-standard implementations.
 setInterval(sophis.VideoControl.insertAll, 1000);
 
-////////////////////////////////////////////////////////////////////////////////
-//})();
