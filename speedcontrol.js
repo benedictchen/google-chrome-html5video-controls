@@ -83,7 +83,7 @@ sophis.VideoControl.prototype.createDom = function() {
   minusButton.classList.add('sophis-btn', 'decrease');
   plusButton.textContent = '+';
   plusButton.classList.add('sophis-btn', 'increase');
-  closeButton.classList.add('sophis-close-button');
+  closeButton.classList.add('sophis-btn', 'sophis-close-button');
   closeButton.textContent = 'close';
   fragment.appendChild(container);
   this.videoEl_.parentElement.insertBefore(fragment, this.videoEl_);
@@ -113,8 +113,9 @@ sophis.VideoControl.prototype.enterDocument = function() {
   var clickHandler = this.handleClick_.bind(this);
   var keydownHandler = this.handleKeyDown_.bind(this);
   var keyPressHandler = this.handleKeyPress_.bind(this);
-  document.body.addEventListener('click', clickHandler, true);
-  document.body.addEventListener('dblclick', clickHandler, true);
+  this.el_.addEventListener('click', clickHandler, true);
+  this.el_.addEventListener('dblclick', clickHandler, true);
+  this.el_.addEventListener('mousedown', clickHandler, true);
   document.body.addEventListener('keydown', keydownHandler, true);
   document.body.addEventListener('keypress', keyPressHandler, true);
   // Set speed indicator to correct amount.

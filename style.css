@@ -1,61 +1,64 @@
 .sophis-video {
-  position: relative !important;
-  text-align: center !important;
-  font-family: "Helvetica Neue Light", Helvetica, Arial, sans-serif !important;
+  position: relative;
+  text-align: center;
+  font-family: "Helvetica Neue Light", Helvetica, Arial, sans-serif;
 }
 
 .sophis-video-control {
-  position: absolute !important;
-  background: black !important;
-  color: white !important;
-  border-radius: 5px !important;
-  border: 1px solid #ccc !important;
-  padding: 5px !important;
-  z-index: 9999999 !important;
-  outline: none !important;
-  opacity: 0.3 !important;
-  -webkit-transition: all 0.5s !important;
-  margin: 10px !important;
-  -webkit-user-select: none !important;
-  cursor: pointer !important;
+  position: absolute;
+  background: black;
+  color: white;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding: 5px;
+  z-index: 9999999;
+  outline: none;
+  opacity: 0.3;
+  -webkit-transition: all 0.5s;
+  margin: 10px;
+  -webkit-user-select: none;
+  cursor: pointer;
 }
 
 .sophis-video-control:hover {
-  opacity: 1 !important;
+  opacity: 1;
 }
 
 .sophis-video-control .sophis-btn {
-  display: inline-block !important;
-  height: 20px !important;
-  width: 20px !important;
-  color: white !important;
-  background: black !important;
-  border: 1px solid white !important;
-  border-radius: 1000px !important;
-  outline: none !important;
-  -webkit-transition: all 0.2s !important;
-  line-height: 20px !important;
-  padding: 0 !important;
-  vertical-align: center !important;
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  color: white;
+  background: black;
+  border: 1px solid white;
+  border-radius: 1000px;
+  outline: none;
+  -webkit-transition: all 0.2s;
+  line-height: 20px;
+  padding: 0;
+  vertical-align: center;
 }
 
 .sophis-video-control .sophis-btn:active {
-  border: 1px solid lightblue !important;
-  color: lightblue !important;
+  border: 1px solid lightblue;
+  color: lightblue;
 }
 
 .sophis-video-control .speed-indicator {
-  color: white !important;
-  padding: 0 10px !important;
+  color: white;
+  padding: 0 10px;
 }
 
-.sophis-close-button {
-  position: absolute !important;
-  bottom: -10px !important;
-  left: -webkit-calc(50% - 10px) !important;
-  margin: auto !important;
-  display: block !important;
-  color: #ccc !important;
-  font-size: 10px !important;
-  font-weight: light !important;
+.sophis-btn.sophis-close-button {
+  position: absolute;
+  border-radius: none;
+  background: none;
+  bottom: -20px;
+  left: -webkit-calc(50% - 10px);
+  margin: auto;
+  display: block;
+  color: #ccc;
+  font-size: 10px;
+  font-weight: light;
+  border: none;
 }
