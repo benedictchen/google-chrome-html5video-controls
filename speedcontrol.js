@@ -114,7 +114,6 @@ sophis.VideoControl.prototype.enterDocument = function() {
   var keydownHandler = this.handleKeyDown_.bind(this);
   var keyPressHandler = this.handleKeyPress_.bind(this);
   this.el_.addEventListener('click', clickHandler, true);
-  this.el_.addEventListener('dblclick', clickHandler, true);
   document.body.addEventListener('keydown', keydownHandler, true);
   document.body.addEventListener('keypress', keyPressHandler, true);
   // Set speed indicator to correct amount.
@@ -261,7 +260,6 @@ sophis.VideoControl.prototype.getSpeed = function() {
 sophis.VideoControl.prototype.dispose = function() {
   var clickHandler = this.handleClick_.bind(this);
   this.el_.removeEventListener('click', clickHandler);
-  this.el_.removeEventListener('dblclick', clickHandler);
   this.el_.parentNode.removeChild(this.el_);
 };
 
