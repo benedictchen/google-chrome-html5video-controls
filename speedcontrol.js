@@ -40,6 +40,12 @@ sophis.VideoControl = function(targetEl) {
   this.el_ = null;
 
   /**
+   * The shadow container that stores the controls.
+   * @private {Element}
+   */
+  this.bgEl_ = null;
+
+  /**
    * The video element.
    * @private {Element}
    */
@@ -92,6 +98,7 @@ sophis.VideoControl.prototype.createDom = function() {
   this.videoEl_.classList.add('sophis-video');
   this.el_ = container;
   this.el_.classList.add(sophis.VideoControl.CLASS_NAME);
+  this.bgEl_ = bg;
   this.speedIndicator_ = speedIndicator;
   this.minusButton_ = minusButton;
   this.plusButton_ = plusButton;
@@ -115,8 +122,8 @@ sophis.VideoControl.prototype.enterDocument = function() {
   var clickHandler = this.handleClick_.bind(this);
   var keydownHandler = this.handleKeyDown_.bind(this);
   var keyPressHandler = this.handleKeyPress_.bind(this);
-  this.el_.addEventListener('click', clickHandler, true);
-  this.el_.addEventListener('dblclick', clickHandler, true);
+  this.bgEl_.addEventListener('click', clickHandler, true);
+  this.bgEl_.addEventListener('dblclick', clickHandler, true);
   document.body.addEventListener('keydown', keydownHandler, true);
   document.body.addEventListener('keypress', keyPressHandler, true);
   // Set speed indicator to correct amount.
@@ -262,8 +269,8 @@ sophis.VideoControl.prototype.getSpeed = function() {
  */
 sophis.VideoControl.prototype.dispose = function() {
   var clickHandler = this.handleClick_.bind(this);
-  this.el_.removeEventListener('click', clickHandler);
-  this.el_.removeEventListener('dblclick', clickHandler);
+  this.bgEl_.removeEventListener('click', clickHandler);
+  this.bgEl_.removeEventListener('dblclick', clickHandler);
   this.el_.parentNode.removeChild(this.el_);
 };
 
