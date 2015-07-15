@@ -284,7 +284,7 @@ sophis.VideoControl.prototype.dispose = function() {
   var clickHandler = this.handleClick_.bind(this);
   var dblClickHandler = this.handleDblClick_.bind(this);
   this.bgEl_.removeEventListener('click', clickHandler);
-  this.bgEl_.removeEventListener('dblclick', clickHandler);
+  this.bgEl_.removeEventListener('dblclick', dblClickHandler);
   this.el_.parentNode.removeChild(this.el_);
 };
 
