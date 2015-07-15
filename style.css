@@ -1,30 +1,28 @@
-.sophis-video {
-  position: relative;
-  text-align: center;
-  font-family: "Helvetica Neue Light", Helvetica, Arial, sans-serif;
-}
-
 .sophis-video-control {
   position: absolute;
+  z-index: 9999999;
+}
+
+.sophis-video-control::shadow .sophis-bg {
+  transition: opacity 0.25s;
+  opacity: 0.3;
+  -webkit-user-select: none;
+  font: 12px/1em "Helvetica Neue Light", Helvetica, Arial, sans-serif;
+  vertical-align: middle;
   background: black;
   color: white;
   border-radius: 5px;
   border: 1px solid #ccc;
   padding: 5px;
-  z-index: 9999999;
-  outline: none;
-  opacity: 0.3;
-  -webkit-transition: all 0.5s;
   margin: 10px;
-  -webkit-user-select: none;
-  cursor: pointer;
+  position: relative;
 }
 
-.sophis-video-control:hover {
+.sophis-video-control:hover::shadow .sophis-bg {
   opacity: 1;
 }
 
-.sophis-video-control .sophis-btn {
+.sophis-video-control::shadow .sophis-btn {
   display: inline-block;
   height: 20px;
   width: 20px;
@@ -37,24 +35,28 @@
   line-height: 20px;
   padding: 0;
   vertical-align: center;
+  cursor: pointer;
 }
 
-.sophis-video-control .sophis-btn:active {
+.sophis-video-control::shadow .sophis-btn:active {
   border: 1px solid lightblue;
   color: lightblue;
 }
 
-.sophis-video-control .speed-indicator {
+.sophis-video-control::shadow .speed-indicator {
   color: white;
   padding: 0 10px;
+  cursor: default;
 }
 
-.sophis-btn.sophis-close-button {
+.sophis-video-control::shadow .sophis-btn.sophis-close-button {
   position: absolute;
   border-radius: none;
   background: none;
   bottom: -20px;
-  left: -webkit-calc(50% - 10px);
+  left: calc(50% - 15px);
+  width: 30px;
+  text-align: center;
   margin: auto;
   display: block;
   color: #ccc;
