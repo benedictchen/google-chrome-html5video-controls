@@ -3,7 +3,7 @@
 
   "name": "HTML5 Video Speed Control",
   "description": "Speed controls for html5 video.",
-  "version": "1.37",
+  "version": "1.38",
   "permissions": [
     "activeTab"
   ],
