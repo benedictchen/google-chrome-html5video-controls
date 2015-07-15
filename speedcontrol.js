@@ -40,6 +40,12 @@ sophis.VideoControl = function(targetEl) {
   this.el_ = null;
 
   /**
+   * The shadow container that stores the controls.
+   * @private {Element}
+   */
+  this.bgEl_ = null;
+
+  /**
    * The video element.
    * @private {Element}
    */
@@ -68,16 +74,19 @@ sophis.VideoControl.CLASS_NAME = 'sophis-video-control';
  * Creates the HTML body of the controls.
  */
 sophis.VideoControl.prototype.createDom = function() {
-  var fragment = document.createDocumentFragment();
   var container = document.createElement('div');
+  var shadow = container.createShadowRoot();
+  var bg = document.createElement('div');
   var speedIndicator = document.createElement('span');
   var minusButton = document.createElement('button');
   var plusButton = document.createElement('button');
   var closeButton = document.createElement('a');
-  container.appendChild(minusButton);
-  container.appendChild(speedIndicator);
-  container.appendChild(plusButton);
-  container.appendChild(closeButton);
+  shadow.appendChild(bg);
+  bg.appendChild(minusButton);
+  bg.appendChild(speedIndicator);
+  bg.appendChild(plusButton);
+  bg.appendChild(closeButton);
+  bg.classList.add('sophis-bg');
   speedIndicator.classList.add('speed-indicator');
   minusButton.textContent = '-';
   minusButton.classList.add('sophis-btn', 'decrease');
@@ -85,11 +94,11 @@ sophis.VideoControl.prototype.createDom = function() {
   plusButton.classList.add('sophis-btn', 'increase');
   closeButton.classList.add('sophis-btn', 'sophis-close-button');
   closeButton.textContent = 'close';
-  fragment.appendChild(container);
-  this.videoEl_.parentElement.insertBefore(fragment, this.videoEl_);
+  this.videoEl_.parentElement.insertBefore(container, this.videoEl_);
   this.videoEl_.classList.add('sophis-video');
   this.el_ = container;
   this.el_.classList.add(sophis.VideoControl.CLASS_NAME);
+  this.bgEl_ = bg;
   this.speedIndicator_ = speedIndicator;
   this.minusButton_ = minusButton;
   this.plusButton_ = plusButton;
@@ -114,8 +123,8 @@ sophis.VideoControl.prototype.enterDocument = function() {
   var dblClickHandler = this.handleDblClick_.bind(this);
   var keydownHandler = this.handleKeyDown_.bind(this);
   var keyPressHandler = this.handleKeyPress_.bind(this);
-  this.el_.addEventListener('click', clickHandler, true);
-  this.el_.addEventListener('dblclick', dblClickHandler, true);
+  this.bgEl_.addEventListener('click', clickHandler, true);
+  this.bgEl_.addEventListener('dblclick', dblClickHandler, true);
   document.body.addEventListener('keydown', keydownHandler, true);
   document.body.addEventListener('keypress', keyPressHandler, true);
   // Set speed indicator to correct amount.
@@ -273,9 +282,11 @@ sophis.VideoControl.prototype.getSpeed = function() {
  */
 sophis.VideoControl.prototype.dispose = function() {
   var clickHandler = this.handleClick_.bind(this);
-  this.el_.removeEventListener('click', clickHandler);
   var dblClickHandler = this.handleDblClick_.bind(this);
-  this.el_.removeEventListener('dblclick', dblClickHandler);
+  this.bgEl_.removeEventListener('click', clickHandler);
+  this.bgEl_.removeEventListener('dblclick', dblClickHandler);
+  this.bgEl_.removeEventListener('click', clickHandler);
+  this.bgEl_.removeEventListener('dblclick', clickHandler);
   this.el_.parentNode.removeChild(this.el_);
 };
 
@@ -292,6 +303,7 @@ sophis.VideoControl.insertAll = function () {
     }
   });
 };
+
 // Listen for new video elements and inject into it.
 document.addEventListener('DOMNodeInserted', function(event) {
   var node = event.target || null;
