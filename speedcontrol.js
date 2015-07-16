@@ -120,10 +120,11 @@ sophis.VideoControl.prototype.createDom = function() {
 sophis.VideoControl.prototype.enterDocument = function() {
   var self = this;
   var clickHandler = this.handleClick_.bind(this);
+  var dblClickHandler = this.handleDblClick_.bind(this);
   var keydownHandler = this.handleKeyDown_.bind(this);
   var keyPressHandler = this.handleKeyPress_.bind(this);
   this.bgEl_.addEventListener('click', clickHandler, true);
-  this.bgEl_.addEventListener('dblclick', clickHandler, true);
+  this.bgEl_.addEventListener('dblclick', dblClickHandler, true);
   document.body.addEventListener('keydown', keydownHandler, true);
   document.body.addEventListener('keypress', keyPressHandler, true);
   // Set speed indicator to correct amount.
@@ -224,7 +225,6 @@ sophis.VideoControl.prototype.handleClick_ = function(e) {
   }
   e.preventDefault();
   e.stopPropagation();
-  e.cancelBubble = true;
   if (e.target === this.minusButton_) {
     this.decreaseSpeed();
   } else if (e.target === this.plusButton_) {
@@ -235,6 +235,19 @@ sophis.VideoControl.prototype.handleClick_ = function(e) {
   // Redundant if we listen for 'ratechange', but do it anyway
   this.speedIndicator_.textContent = this.getSpeed();
   return false;
+};
+
+/**
+ * Handles a double-click event on the video controls.
+ * @param {Event} e The native click event.
+ * @private
+ */
+sophis.VideoControl.prototype.handleDblClick_ = function(e) {
+  if (!e.target.classList.contains('sophis-btn')) {
+    return;
+  }
+  e.preventDefault();
+  e.stopPropagation();
 };
 
 /**
@@ -269,8 +282,9 @@ sophis.VideoControl.prototype.getSpeed = function() {
  */
 sophis.VideoControl.prototype.dispose = function() {
   var clickHandler = this.handleClick_.bind(this);
+  var dblClickHandler = this.handleDblClick_.bind(this);
   this.bgEl_.removeEventListener('click', clickHandler);
-  this.bgEl_.removeEventListener('dblclick', clickHandler);
+  this.bgEl_.removeEventListener('dblclick', dblClickHandler);
   this.el_.parentNode.removeChild(this.el_);
 };
 
