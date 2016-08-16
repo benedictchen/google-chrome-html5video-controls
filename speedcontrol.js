@@ -200,11 +200,9 @@ sophis.VideoControl.prototype.handleKeyDown_ = function(e) {
   if (keyCode) {
     switch (keyCode) {
       case KeyCodes.DOWN:
-      case KeyCodes.LEFT:
         this.decreaseSpeed();
       break;
       case KeyCodes.UP:
-      case KeyCodes.RIGHT:
         this.increaseSpeed();
       break;
       default:
