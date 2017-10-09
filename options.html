@@ -1,28 +1,47 @@
 <!DOCTYPE html>
 <html>
-<head><title>My Test Extension Options</title></head>
-<body>
-
-Increment Value:
-<select id="increment">
- <option value="0.01">0.01</option>
- <option value="0.1">0.1</option>
- <option value="0.2">0.2</option>
- <option value="0.5">0.5</option>
-</select>
-
-Key Combo:
-<select id="keys">
- <option value="pgup">PgUp/PgDn</option>
- <option value="udar">Up/Down Arrows</option>
- <option value="lrar">Left/Right Arrows</option>
-</select>
-
-
-
-<div id="status"></div>
-<button id="save">Save</button>
-
-<script src="options.js"></script>
-</body>
+	<head>
+		<title>Video Speed Control Options</title>
+		<style>
+			body
+			{
+			margin: 45px;
+			font-size: 20px; 
+			}
+			.select-style{
+			font-size: 15px; 
+			border: 1px solid #AAA;
+			background:#EEE;
+			width: 150px;
+			padding: 5px 8px;
+			}
+			.btn {
+			width: 120px;
+			color: #072647;
+			font-size: 18px;
+			background: #c6cdd1;
+			padding: 5px 10px 5px 10px;
+			}
+		</style>
+	</head>
+	<body>
+		Increment Value:
+		<select id="increment" class="select-style">
+			<option value="0.01">0.01</option>
+			<option value="0.1">0.1</option>
+			<option value="0.2">0.2</option>
+			<option value="0.5">0.5</option>
+		</select>
+		<br /><br />
+		Key Combination:
+		<select id="keyCombo" class="select-style">
+			<option value="pgud">PgUp/PgDn</option>
+			<option value="udar">Up/Down Arrows</option>
+			<option value="lrar">Left/Right Arrows</option>
+		</select>
+		<br /><br />
+		<div id="status"></div>
+		<button id="save" class="btn">Save</button>
+		<script src="options.js"></script>
+	</body>
 </html>
