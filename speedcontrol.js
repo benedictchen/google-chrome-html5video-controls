@@ -6,6 +6,13 @@
 
 var sophis = sophis || {};
 
+var increment = 0.1;
+var keyCombo = 'udar';
+chrome.storage.sync.get(null, function(items) {
+    this.increment = items.increment;
+    this.keyCombo = items.keyCombo;
+  });
+
 /**
  * Keyboard character mappings from their numeric values.
  * @type {Object.<String:Number>}
@@ -15,7 +22,9 @@ var KeyCodes = {
   UP: 38,
   DOWN: 40,
   LEFT: 37,
-  RIGHT: 39
+  RIGHT: 39,
+  PAGEUP: 33,
+  PAGEDOWN: 34
 };
 
 /**
@@ -138,14 +147,15 @@ sophis.VideoControl.prototype.enterDocument = function() {
  * Increases the current video's playback rate.
  */
 sophis.VideoControl.prototype.decreaseSpeed = function () {
-  this.videoEl_.playbackRate -= 0.10;
+  console.log('increaing speed by '+increment);
+  this.videoEl_.playbackRate -= increment;
 };
 
 /**
  * Decreases the current video's playback rate.
  */
 sophis.VideoControl.prototype.increaseSpeed = function () {
-  this.videoEl_.playbackRate += 0.10;
+  this.videoEl_.playbackRate += increment;
 };
 
 /**
@@ -197,7 +207,35 @@ sophis.VideoControl.prototype.handleKeyDown_ = function(e) {
     return;
   }
   var keyCode = e.keyCode;
-  if (keyCode) {
+  console.log('key pressed' + keyCode)
+  console.log('keyCombo = ' + keyCombo)
+  if (keyCode && keyCombo === 'pgud') {
+    switch (keyCode) {
+      case KeyCodes.PAGEDOWN:
+        this.decreaseSpeed();
+      break;
+      case KeyCodes.PAGEUP:
+        this.increaseSpeed();
+      break;
+      default:
+        this.videoEl_.focus();
+        return false;
+    }
+  }
+  else if (keyCode && keyCombo === 'lrar') {
+    switch (keyCode) {
+      case KeyCodes.LEFT:
+        this.decreaseSpeed();
+      break;
+      case KeyCodes.RIGHT:
+        this.increaseSpeed();
+      break;
+      default:
+        this.videoEl_.focus();
+        return false;
+    }
+  }
+  else if (keyCode && keyCombo === 'udar') {
     switch (keyCode) {
       case KeyCodes.DOWN:
         this.decreaseSpeed();
