@@ -147,7 +147,6 @@ sophis.VideoControl.prototype.enterDocument = function() {
  * Increases the current video's playback rate.
  */
 sophis.VideoControl.prototype.decreaseSpeed = function () {
-  console.log('increaing speed by '+increment);
   this.videoEl_.playbackRate -= increment;
 };
 
@@ -207,8 +206,6 @@ sophis.VideoControl.prototype.handleKeyDown_ = function(e) {
     return;
   }
   var keyCode = e.keyCode;
-  console.log('key pressed' + keyCode)
-  console.log('keyCombo = ' + keyCombo)
   if (keyCode && keyCombo === 'pgud') {
     switch (keyCode) {
       case KeyCodes.PAGEDOWN:
