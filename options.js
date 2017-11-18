@@ -2,9 +2,12 @@
 function save_options() {
   var increment = document.getElementById('increment').value;
   var keyCombo = document.getElementById('keyCombo').value;
+  var blackListedSites = document.getElementById('blacklist').value;
+  console.log('blackListedSites', blackListedSites);
   chrome.storage.sync.set({
     increment: increment,
-    keyCombo: keyCombo
+    keyCombo: keyCombo,
+    blackListedSites: blackListedSites
   }, function() {
     // Update status to let user know options were saved.
     var status = document.getElementById('status');
@@ -20,10 +23,12 @@ function save_options() {
 function restore_options() {
   chrome.storage.sync.get({
     increment: '0.1',
-    keyCombo: 'udar'
+    keyCombo: 'udar',
+    blackListedSites: 'vine.com'
   }, function(items) {
     document.getElementById('increment').value = items.increment;
     document.getElementById('keyCombo').value = items.keyCombo;
+    document.getElementById('blacklist').value = items.blackListedSites;
   });
 }
 document.addEventListener('DOMContentLoaded', restore_options);

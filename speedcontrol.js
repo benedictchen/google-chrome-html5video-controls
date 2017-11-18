@@ -8,10 +8,33 @@ var sophis = sophis || {};
 
 var increment = 0.1;
 var keyCombo = 'udar';
-chrome.storage.sync.get(null, function(items) {
-    this.increment = items.increment;
-    this.keyCombo = items.keyCombo;
+var blackListedSites = ['vine.com'];
+
+var isCurrentSiteBlackListed = function() {
+  console.error(`isCurrentSiteBlackListed called: `, blackListedSites);
+  blackListedSites.forEach((blackListedSite) => {
+    console.log(`blackListedSite: ${blackListedSite} sophis.VideoControl.isLocation(blackListedSite): ${sophis.VideoControl.isLocation(blackListedSite)}`)
+    if (blackListedSite && sophis.VideoControl.isLocation(blackListedSite)) {
+      console.error('site IS blacklisted', blackListedSite);
+      sophis.VideoControl.killAll()
+    }
   });
+};
+
+chrome.storage.sync.get(null, function(items) {
+  console.warn(items)
+  this.increment = items.increment;
+  this.keyCombo = items.keyCombo;
+  console.error(`items.blackListedSites:::${items.blackListedSites}`)
+  blackListedSites = (items.blackListedSites &&
+                      items.blackListedSites.split(/[\t\n\r,\s]/g)
+                                            .filter((item) => !!item))|| [];
+  // NOTE: The issue here is that the settings are retreived after the component
+  // is loaded, so we need to retroactively remove the items.
+  if (isCurrentSiteBlackListed()) {
+    sophis.VideoControl.killAll()
+  }
+});
 
 /**
  * Keyboard character mappings from their numeric values.
@@ -71,13 +94,31 @@ sophis.VideoControl = function(targetEl) {
    */
   this.closeButton_ = null;
 
-  this.createDom();
-  this.enterDocument();
+  if (!isCurrentSiteBlackListed()) {
+    this.createDom();
+    this.enterDocument();
+    sophis.VideoControl.instances.push(this);
+  } else {
+    console.warn('Current site is blacklisted from speed controller.');
+  }
 };
 
 /** @const */
 sophis.VideoControl.CLASS_NAME = 'sophis-video-control';
 
+/**
+ * Keeps track of all current instances of current class.
+ * @type {Array.<sophis.VideoControl>}
+ */
+sophis.VideoControl.instances = [];
+
+/**
+ * Removes all instances of the current class.
+ */
+sophis.VideoControl.killAll = function() {
+  sophis.VideoControl.instances.forEach((instance) => instance.dispose());
+  sophis.VideoControl.instances = [];
+}
 
 /**
  * Creates the HTML body of the controls.
@@ -311,12 +352,21 @@ sophis.VideoControl.prototype.isEmbeddedInIframe_ = function() {
 };
 
 /**
+ * Determines whether we are coming from a particular URL.
+ * @param {String|RegExp} url The URL patten to match against.
+ * @return {Boolean} Whether or not the current window is from a URL.
+ */
+sophis.VideoControl.isLocation = function(url) {
+  return !!window.location.href.match(url);
+};
+
+/**
  * Determines whether we are coming from a Vimeo URL.
  * @return {Boolean} Whether or not the current window is from Vimeo.
  * @private
  */
 sophis.VideoControl.prototype.isLocationVimeo_ = function() {
-  return !!window.location.href.match('vimeo');
+  return sophis.VideoControl.isLocation('vimeo');
 };
 
 /**
