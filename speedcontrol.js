@@ -11,21 +11,16 @@ var keyCombo = 'udar';
 var blackListedSites = ['vine.com'];
 
 var isCurrentSiteBlackListed = function() {
-  console.error(`isCurrentSiteBlackListed called: `, blackListedSites);
   blackListedSites.forEach((blackListedSite) => {
-    console.log(`blackListedSite: ${blackListedSite} sophis.VideoControl.isLocation(blackListedSite): ${sophis.VideoControl.isLocation(blackListedSite)}`)
     if (blackListedSite && sophis.VideoControl.isLocation(blackListedSite)) {
-      console.error('site IS blacklisted', blackListedSite);
       sophis.VideoControl.killAll()
     }
   });
 };
 
 chrome.storage.sync.get(null, function(items) {
-  console.warn(items)
   this.increment = items.increment;
   this.keyCombo = items.keyCombo;
-  console.error(`items.blackListedSites:::${items.blackListedSites}`)
   blackListedSites = (items.blackListedSites &&
                       items.blackListedSites.split(/[\t\n\r,\s]/g)
                                             .filter((item) => !!item))|| [];

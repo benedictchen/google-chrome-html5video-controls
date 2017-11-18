@@ -3,7 +3,6 @@ function save_options() {
   var increment = document.getElementById('increment').value;
   var keyCombo = document.getElementById('keyCombo').value;
   var blackListedSites = document.getElementById('blacklist').value;
-  console.log('blackListedSites', blackListedSites);
   chrome.storage.sync.set({
     increment: increment,
     keyCombo: keyCombo,
