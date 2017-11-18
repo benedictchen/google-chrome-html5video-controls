@@ -132,10 +132,13 @@ sophis.VideoControl.prototype.enterDocument = function() {
   var dblClickHandler = this.handleDblClick_.bind(this);
   var keydownHandler = this.handleKeyDown_.bind(this);
   var keyPressHandler = this.handleKeyPress_.bind(this);
+  var dragHandler = this.handleDragEndEvent_.bind(this);
   this.bgEl_.addEventListener('click', clickHandler, true);
   this.bgEl_.addEventListener('dblclick', dblClickHandler, true);
   document.body.addEventListener('keydown', keydownHandler, true);
   document.body.addEventListener('keypress', keyPressHandler, true);
+  document.body.addEventListener('dragend', dragHandler, true);
+  this.el_.setAttribute('draggable', true);
   // Set speed indicator to correct amount.
   this.speedIndicator_.textContent = this.getSpeed();
   this.videoEl_.addEventListener('ratechange', function() {
@@ -284,6 +287,20 @@ sophis.VideoControl.prototype.handleDblClick_ = function(e) {
 };
 
 /**
+ * Handles when the user drags the control node.
+ * @param {Event} e The native drag event.
+ * @private
+ */
+sophis.VideoControl.prototype.handleDragEndEvent_ = function(e) {
+  let leftPosition = Math.max(0, e.clientX);
+  // BUG: For whatever reason, the drag offset height is wonky and
+  // is arbitrarily approximately 80 pixels pushed downward.
+  let topPosition = Math.max(0, e.clientY - this.el_.offsetHeight - 80);
+  this.el_.style.left = `${leftPosition}px`;
+  this.el_.style.top = `${topPosition}px`;
+};
+
+/**
  * Determines whether or not the current page is being executed within
  * the boundaries of an iframe.
  * @return {Boolean} Whether or not the current page is an iframe.
@@ -314,10 +331,6 @@ sophis.VideoControl.prototype.getSpeed = function() {
  * Destroys and removes the component from page.
  */
 sophis.VideoControl.prototype.dispose = function() {
-  var clickHandler = this.handleClick_.bind(this);
-  var dblClickHandler = this.handleDblClick_.bind(this);
-  this.bgEl_.removeEventListener('click', clickHandler);
-  this.bgEl_.removeEventListener('dblclick', dblClickHandler);
   this.el_.parentNode.removeChild(this.el_);
 };
 
