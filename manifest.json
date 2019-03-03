@@ -4,7 +4,7 @@
   "name": "HTML5 Video Speed Control",
   "description": "Speed controls for html5 video.",
   "options_page": "options.html",
-  "version": "1.42",
+  "version": "1.43",
   "permissions": [
     "storage",
     "activeTab"
