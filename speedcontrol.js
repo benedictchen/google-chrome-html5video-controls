@@ -18,7 +18,11 @@ var isCurrentSiteBlackListed = function() {
   });
 };
 
-chrome.storage.sync.get(null, function(items) {
+chrome.storage.sync.get({
+  'increment': increment,
+  'keyCombo': keyCombo,
+  'blackListedSites': blackListedSites
+}, function(items) {
   this.increment = items.increment;
   this.keyCombo = items.keyCombo;
   blackListedSites = (items.blackListedSites &&
@@ -186,14 +190,14 @@ sophis.VideoControl.prototype.enterDocument = function() {
  * Increases the current video's playback rate.
  */
 sophis.VideoControl.prototype.decreaseSpeed = function () {
-  this.videoEl_.playbackRate -= increment;
+  this.videoEl_.playbackRate = Math.round((this.videoEl_.playbackRate - Number(increment)) * 100) / 100;
 };
 
 /**
  * Decreases the current video's playback rate.
  */
 sophis.VideoControl.prototype.increaseSpeed = function () {
-  this.videoEl_.playbackRate += increment;
+  this.videoEl_.playbackRate = Math.round((this.videoEl_.playbackRate + Number(increment)) * 100) / 100;
 };
 
 /**
